@@ -194,40 +194,81 @@ public class LoginFrame extends JFrame {
         // 7. 添加到背景面板
         bgPanel.add(closeBtn);
 
-        // --- 核心逻辑：点击登录进入游戏 ---
+        // --- 核心逻辑：点击【步入江湖】登录 ---
         loginBtn.addActionListener(e -> {
-            String username = userField.getText();
-            String password = new String(passField.getPassword());
-
-            // 判断输入是否为空
-            if (username.equals("请输入用户名") || username.isEmpty() || password.isEmpty()) {
+            String username = userField.getText().trim();
+            String password = new String(passField.getPassword()).trim();
+            // 1. 判断空值
+            if (username.isEmpty() || password.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "用户名或密码不能为空！", "提示", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
-            System.out.println("登录成功，准备进入游戏...");
-            this.dispose(); // 关闭当前的登录窗口
-
-            // 【这里是你原本的代码】启动象棋界面
-            Board board = new Board();
-            ChessFrame frame = new ChessFrame(board);
-            ChessController controller = new ChessController(board, frame.getBoardPanel());
-            frame.getBoardPanel().addMouseListener(controller);
-            frame.setVisible(true);
+            // 2. 去 user.txt 里面核对账号和密码
+            boolean loginSuccess = false;
+            java.io.File file = new java.io.File("user.txt");
+            if (file.exists()) {
+                try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        // 按逗号分割，parts[0]是名字，parts[1]是密码
+                        String[] parts = line.split(",");
+                        if (parts.length == 2 && parts[0].equals(username) && parts[1].equals(password)) {
+                            loginSuccess = true; // 找到了，验证通过！
+                            break;
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            // 3. 如果验证通过，进入游戏
+            if (loginSuccess) {
+                System.out.println("登录成功，准备进入游戏...");
+                this.dispose(); // 关闭登录窗口
+                // 启动象棋界面
+                Board board = new Board();
+                ChessFrame frame = new ChessFrame(board);
+                ChessController controller = new ChessController(board, frame.getBoardPanel());
+                frame.getBoardPanel().addMouseListener(controller);
+                frame.setVisible(true);
+            } else {
+                // 验证失败，弹窗报错
+                JOptionPane.showMessageDialog(this, "用户名或密码错误！\n如果没有账号请先注册。", "登录失败", JOptionPane.ERROR_MESSAGE);
+                passField.setText(""); // 清空密码框
+            }
         });
 
-        // --- 核心逻辑：点击注册 ---
+        // --- 核心逻辑：点击【榜上有名】注册 ---
         regBtn.addActionListener(e -> {
-            String username = userField.getText();
-            if (username.equals("请输入用户名") || username.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "请先输入要注册的用户名！", "提示", JOptionPane.WARNING_MESSAGE);
+            String username = userField.getText().trim();
+            String password = new String(passField.getPassword()).trim();
+            // 1. 判断空值
+            if (username.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "用户名和密码都不能为空！", "提示", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            // 写入文件
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("user.txt", true))) {
-                writer.write(username + "\n");
-                JOptionPane.showMessageDialog(this, "注册成功！", "成功", JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
+            // 1. 检查这个用户名是不是已经被别人注册了
+            java.io.File file = new java.io.File("user.txt");
+            if (file.exists()) {
+                try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] parts = line.split(",");
+                        if (parts.length > 0 && parts[0].equals(username)) {
+                            JOptionPane.showMessageDialog(this, "该用户名已被注册，请换一个！", "提示", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            // 2. 把新账号密码存进文件，中间用逗号隔开
+            try (java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(file, true))) {
+                writer.write(username + "," + password + "\n"); // 格式：名字,密码
+                JOptionPane.showMessageDialog(this, "注册成功！请点击登录。", "成功", JOptionPane.INFORMATION_MESSAGE);
+                passField.setText("");
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "注册失败：" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             }
         });
