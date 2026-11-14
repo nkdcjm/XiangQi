@@ -15,9 +15,41 @@ public class Board {
     }
 
     private void initializePieces() {
-        pieces[9][3] = new AdvisorPiece();
-        pieces[9][4] = new GeneralPiece();
-        pieces[9][5] = new AdvisorPiece();
+        // ===== 黑方（上方，row 0~2）=====
+        pieces[0][0] = new JuPiece(false);         // 車
+        pieces[0][1] = new MaPiece(false);         // 马
+        pieces[0][2] = new XiangPiece(false);      // 象
+        pieces[0][3] = new AdvisorPiece(false);    // 士
+        pieces[0][4] = new GeneralPiece(false);    // 将
+        pieces[0][5] = new AdvisorPiece(false);    // 士
+        pieces[0][6] = new XiangPiece(false);      // 象
+        pieces[0][7] = new MaPiece(false);         // 马
+        pieces[0][8] = new JuPiece(false);         // 車
+        pieces[2][1] = new PaoPiece(false);        // 砲
+        pieces[2][7] = new PaoPiece(false);        // 砲
+        pieces[3][0] = new BingPiece(false);       // 卒
+        pieces[3][2] = new BingPiece(false);
+        pieces[3][4] = new BingPiece(false);
+        pieces[3][6] = new BingPiece(false);
+        pieces[3][8] = new BingPiece(false);
+
+        // ===== 红方（下方，row 9~6）=====
+        pieces[9][0] = new JuPiece(true);          // 俥
+        pieces[9][1] = new MaPiece(true);          // 马
+        pieces[9][2] = new XiangPiece(true);       // 相
+        pieces[9][3] = new AdvisorPiece(true);     // 仕
+        pieces[9][4] = new GeneralPiece(true);     // 帅
+        pieces[9][5] = new AdvisorPiece(true);     // 仕
+        pieces[9][6] = new XiangPiece(true);       // 相
+        pieces[9][7] = new MaPiece(true);          // 马
+        pieces[9][8] = new JuPiece(true);          // 俥
+        pieces[7][1] = new PaoPiece(true);         // 炮
+        pieces[7][7] = new PaoPiece(true);         // 炮
+        pieces[6][0] = new BingPiece(true);        // 兵
+        pieces[6][2] = new BingPiece(true);
+        pieces[6][4] = new BingPiece(true);
+        pieces[6][6] = new BingPiece(true);
+        pieces[6][8] = new BingPiece(true);
     }
 
     public boolean isInside(int row, int col) {
