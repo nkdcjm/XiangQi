@@ -1,5 +1,4 @@
 package edu.sustech.xiangqi; // 【注意】确保这里和你原来项目的包名一致
-
 // 引入你原本的象棋类（如果报错，说明你的包名不对，按 Alt+Enter 修复）
 import edu.sustech.xiangqi.model.Board;
 import edu.sustech.xiangqi.view.ChessFrame;
@@ -17,6 +16,7 @@ public class LoginFrame extends JFrame {
     private JPasswordField passField;
     private JButton loginBtn;
     private JButton regBtn;
+    private Point origin;//记录鼠标按下的初始坐标
 
     public LoginFrame() {
         // 1. 窗口基础设置
@@ -25,26 +25,9 @@ public class LoginFrame extends JFrame {
         setLocationRelativeTo(null); // 居中显示
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // 2. 设置带背景图的面板
-//        JPanel bgPanel = new JPanel() {
-//            @Override
-//            protected void paintComponent(Graphics g) {
-//                super.paintComponent(g);
-//                // 【注意】确保你的项目根目录有一张叫 bg.jpg 的图片
-//                ImageIcon icon = new ImageIcon("bg.jpg");
-//                if (icon.getImage() != null) {
-//                    g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
-//                } else {
-//                    // 如果没找到图片，用深灰色垫底
-//                    g.setColor(new Color(40, 40, 40));
-//                    g.fillRect(0, 0, getWidth(), getHeight());
-//                }
-//            }
-//        };
         // 2. 优化后的背景面板（解决闪烁问题）
         // 提前把图片加载进内存，只加载一次
         Image bgImage = new ImageIcon("bg.jpg").getImage();
-
         JPanel bgPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -63,6 +46,26 @@ public class LoginFrame extends JFrame {
         };
         bgPanel.setLayout(null); // 使用绝对定位
         setContentPane(bgPanel);
+
+        // --- 实现窗口拖拽 ---
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // 鼠标按下时，记录当前鼠标在窗口里的坐标
+                origin = e.getPoint();
+            }
+        });
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (origin != null) {
+                    // 获取当前鼠标在屏幕上的绝对坐标
+                    Point current = e.getLocationOnScreen();
+                    // 计算窗口应该移动到的新位置
+                    setLocation(current.x - origin.x, current.y - origin.y);
+                }
+            }
+        });
 
         // 3. 初始化所有的按钮和输入框
         initUI(bgPanel);
@@ -156,15 +159,39 @@ public class LoginFrame extends JFrame {
         regBtn.setBounds(centerX - 125, startY + 190, 250, 45);
         bgPanel.add(regBtn);
 
-        // --- 右上角关闭按钮 ---
-        JButton closeBtn = new JButton("X");
-        closeBtn.setBounds(760, 10, 30, 30);
-        closeBtn.setContentAreaFilled(false); // 透明背景
-        closeBtn.setBorderPainted(false);     // 无边框
-        closeBtn.setForeground(Color.WHITE);
-        closeBtn.setFont(new Font("Arial", Font.BOLD, 20));
-        closeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        // --- 右上角关闭按钮 (两张刀剑图特效版) ---
+        // 1. 加载两张刀剑图片
+        Image closeNormal = new ImageIcon("close_normal.png").getImage();
+        Image closeHover = new ImageIcon("close_hover.png").getImage();
+        // 2. 创建自定义按钮
+        JButton closeBtn = new JButton() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                // 开启抗锯齿，让图标边缘平滑
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                // 3. 判断鼠标是否悬停，画不同的图
+                if (getModel().isRollover()) {
+                    // 鼠标移上去：显示发光/红色的图
+                    g2d.drawImage(closeHover, 0, 0, getWidth(), getHeight(), this);
+                } else {
+                    // 平时：显示暗色的图
+                    g2d.drawImage(closeNormal, 0, 0, getWidth(), getHeight(), this);
+                }
+                g2d.dispose();
+            }
+        };
+        // 4. 清除默认的按钮样式（去边框、去背景）
+        closeBtn.setContentAreaFilled(false);
+        closeBtn.setBorderPainted(false);
+        closeBtn.setFocusPainted(false);
+        closeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR)); // 鼠标放上去变成小手
+        // 5. 设置位置和大小 (x=750, y=10, 宽=30, 高=30)
+        // 如果你的窗口边缘没对齐，可以微调 750 和 10 这两个数字
+        closeBtn.setBounds(750, 10, 30, 30);
+        // 6. 点击事件：一刀斩断，直接退出程序
         closeBtn.addActionListener(e -> System.exit(0));
+        // 7. 添加到背景面板
         bgPanel.add(closeBtn);
 
         // --- 核心逻辑：点击登录进入游戏 ---
