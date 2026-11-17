@@ -1,4 +1,4 @@
-package edu.sustech.xiangqi.view; // 👈 注意确认这里的包名和你的目录一致
+package edu.sustech.xiangqi.view;
 
 import edu.sustech.xiangqi.model.Board;
 
