@@ -1,5 +1,6 @@
 package edu.sustech.xiangqi; // 【注意】确保这里和你原来项目的包名一致
 // 引入你原本的象棋类（如果报错，说明你的包名不对，按 Alt+Enter 修复）
+
 import edu.sustech.xiangqi.model.Board;
 import edu.sustech.xiangqi.view.ChessFrame;
 import edu.sustech.xiangqi.controller.ChessController;
@@ -104,11 +105,18 @@ public class LoginFrame extends JFrame {
         userField.setBorder(BorderFactory.createEmptyBorder(5, 16, 5, 16)); // 左边距也设为 16
         // 增加监听，用来在输入或失去焦点时刷新界面
         userField.addKeyListener(new KeyAdapter() {
-            public void keyReleased(KeyEvent e) { repaint(); }
+            public void keyReleased(KeyEvent e) {
+                repaint();
+            }
         });
         userField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent e) { repaint(); }
-            public void focusLost(FocusEvent e) { repaint(); }
+            public void focusGained(FocusEvent e) {
+                repaint();
+            }
+
+            public void focusLost(FocusEvent e) {
+                repaint();
+            }
         });
         bgPanel.add(userField);
 
@@ -141,11 +149,18 @@ public class LoginFrame extends JFrame {
         passField.setBorder(BorderFactory.createEmptyBorder(5, 16, 5, 16)); // 左边距 16 完全一致
         // 增加监听
         passField.addKeyListener(new KeyAdapter() {
-            public void keyReleased(KeyEvent e) { repaint(); }
+            public void keyReleased(KeyEvent e) {
+                repaint();
+            }
         });
         passField.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent e) { repaint(); }
-            public void focusLost(FocusEvent e) { repaint(); }
+            public void focusGained(FocusEvent e) {
+                repaint();
+            }
+
+            public void focusLost(FocusEvent e) {
+                repaint();
+            }
         });
         bgPanel.add(passField);
 
@@ -280,6 +295,7 @@ public class LoginFrame extends JFrame {
             // 1. 加载你做好的两张透明图
             Image imgNormal = new ImageIcon("btn_normal.png").getImage();
             Image imgHover = new ImageIcon("btn_hover.png").getImage();
+
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g.create();

@@ -1,6 +1,7 @@
 package edu.sustech.xiangqi.view; // 👈 注意确认这里的包名和你的目录一致
 
 import edu.sustech.xiangqi.model.Board;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -154,7 +155,7 @@ public class ChessFrame extends JFrame {
                 closeBtn.setLocation(titleBar.getWidth() - 40, 5);
                 fullScreenBtn.setLocation(titleBar.getWidth() - 80, 5);
                 //使标题栏文字框的宽度随窗口变化，居中
-                titleLabel.setBounds(0,0,titleBar.getWidth(),titleBar.getHeight());
+                titleLabel.setBounds(0, 0, titleBar.getWidth(), titleBar.getHeight());
             }
         });
 
@@ -214,7 +215,9 @@ public class ChessFrame extends JFrame {
         // 7.2 右下角等比例拉伸
         Point start = new Point();
         boardPanel.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) { start.setLocation(e.getX(), e.getY()); }
+            public void mousePressed(MouseEvent e) {
+                start.setLocation(e.getX(), e.getY());
+            }
         });
         boardPanel.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
@@ -224,6 +227,7 @@ public class ChessFrame extends JFrame {
                     boardPanel.setCursor(Cursor.getDefaultCursor());
                 }
             }
+
             public void mouseDragged(MouseEvent e) {
                 if (boardPanel.getCursor().getType() == Cursor.SE_RESIZE_CURSOR && !isFullScreen) {
                     int newWidth = getWidth() + e.getX() - start.x;
