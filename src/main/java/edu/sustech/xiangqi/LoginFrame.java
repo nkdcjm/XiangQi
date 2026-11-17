@@ -70,7 +70,7 @@ public class LoginFrame extends JFrame {
 
     private void initUI(JPanel bgPanel) {
         int centerX = getWidth() / 2; // 屏幕中心 X 坐标
-        int startY = 140;             // 起始 Y 坐标
+        int startY = 150;             // 起始 Y 坐标
 
         //用户名输入框 (纯手绘提示词 & 半透明圆角)
         userField = new JTextField() {
@@ -141,7 +141,7 @@ public class LoginFrame extends JFrame {
         passField.setForeground(Color.WHITE); // 密码圆点变白
         passField.setCaretColor(Color.WHITE);
         passField.setFont(new Font("微软雅黑", Font.PLAIN, 16));
-        passField.setBounds(centerX - 125, startY + 55, 250, 40);
+        passField.setBounds(centerX - 125, startY + 60, 250, 40);
         passField.setBorder(BorderFactory.createEmptyBorder(5, 16, 5, 16)); // 左边距 16 完全一致
         // 增加监听
         passField.addKeyListener(new KeyAdapter() {
@@ -162,30 +162,55 @@ public class LoginFrame extends JFrame {
 
         // --- 登录按钮 ---
         loginBtn = createGameButton("步入江湖");
-        loginBtn.setBounds(centerX - 125, startY + 120, 250, 45);
+        loginBtn.setBounds(centerX - 125, startY + 130, 250, 45);
         bgPanel.add(loginBtn);
 
         // --- 注册按钮 ---
         regBtn = createGameButton("榜上有名");
-        regBtn.setBounds(centerX - 125, startY + 185, 250, 45);
+        regBtn.setBounds(centerX - 125, startY + 190, 250, 45);
         bgPanel.add(regBtn);
 
-        // --- 游客模式按钮 ---
-        JButton guestBtn = createGameButton("初出茅庐"); // 复用你写好的圆角按钮方法
-        guestBtn.setBounds(centerX - 125, startY + 250, 250, 45); // 放在注册按钮下面
-        bgPanel.add(guestBtn);
+        // --- 游客试玩 ---
+        // 注意：这里不用 createGameButton 了，直接用原生的 JButton
+        JButton guestBtn = new JButton("游客试玩 →");
 
-        // 游客按钮点击事件：直接跳过校验，进入游戏
+        // 1. 宽度改小一点（比如 120），居中摆放
+        // 注意：这里的 Y 坐标 startY + 260 可能需要根据你上面按钮的位置微调一下
+        guestBtn.setBounds(centerX - 60, startY + 250, 120, 30);
+
+        // 2. 去掉所有背景和边框，让它变成透明文字
+        guestBtn.setContentAreaFilled(false);
+        guestBtn.setBorderPainted(false);
+        guestBtn.setFocusPainted(false);
+
+        // 3. 设置低调的暗灰色字体，字号调小
+        guestBtn.setForeground(new Color(200, 180, 120));
+        guestBtn.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+        guestBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // 4. 鼠标放上去变成小手
+        guestBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // 5. 鼠标悬停时，文字变亮金色，提示用户可以点击
+        guestBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                guestBtn.setForeground(new Color(255, 215, 0));
+            }
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                guestBtn.setForeground(new Color(200, 180, 120));
+            }
+        });
+
+        // 6. 点击逻辑（保持你原来的不变）
         guestBtn.addActionListener(e -> {
-            this.dispose(); // 关闭登录窗口
-
-            // 直接启动象棋界面（你原本的进游戏代码）
+            this.dispose();
             Board board = new Board();
             ChessFrame frame = new ChessFrame(board);
             ChessController controller = new ChessController(board, frame.getBoardPanel());
             frame.getBoardPanel().addMouseListener(controller);
             frame.setVisible(true);
         });
+        bgPanel.add(guestBtn);
 
         // --- 右上角关闭按钮 (两张刀剑图特效版) ---
         // 1. 加载两张刀剑图片
