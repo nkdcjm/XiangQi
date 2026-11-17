@@ -170,38 +170,64 @@ public class LoginFrame extends JFrame {
         regBtn.setBounds(centerX - 125, startY + 190, 250, 45);
         bgPanel.add(regBtn);
 
-        // --- 游客试玩 ---
-        // 注意：这里不用 createGameButton 了，直接用原生的 JButton
-        JButton guestBtn = new JButton("游客试玩 →");
+        // ==========================================
+// --- 游客试玩 (半透明磨砂框 + 鼠标小手) ---
+// ==========================================
+        JButton guestBtn = new JButton("游客试玩 →") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                // 开启抗锯齿，让边缘和文字绝对平滑
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        // 1. 宽度改小一点（比如 120），居中摆放
-        // 注意：这里的 Y 坐标 startY + 260 可能需要根据你上面按钮的位置微调一下
-        guestBtn.setBounds(centerX - 60, startY + 250, 120, 30);
+                // 1. 画半透明磨砂底色
+                if (getModel().isRollover()) {
+                    // 鼠标悬停时，底色稍微变亮（深灰），增加质感
+                    g2d.setColor(new Color(50, 50, 50, 150));
+                } else {
+                    // 平时是纯粹的半透明黑底（120的透明度，绝不突兀）
+                    g2d.setColor(new Color(0, 0, 0, 120));
+                }
+                // 画圆角矩形，弧度20，和你的双龙按钮呼应
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
 
-        // 2. 去掉所有背景和边框，让它变成透明文字
+                // 2. 画极细的暗金色边框，增加高级感
+                g2d.setColor(new Color(150, 120, 60, 200));
+                g2d.setStroke(new BasicStroke(1));
+                g2d.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
+
+                // 3. 画文字
+                g2d.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+                FontMetrics fm = g2d.getFontMetrics();
+                int x = (getWidth() - fm.stringWidth(getText())) / 2;
+                int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
+
+                // 鼠标悬停文字变纯白，平时是灰白
+                if (getModel().isRollover()) {
+                    g2d.setColor(new Color(255,215,0));
+                } else {
+                    g2d.setColor(new Color(200, 180, 120));
+                }
+                g2d.drawString(getText(), x, y);
+
+                g2d.dispose();
+            }
+        };
+
+// 设置位置和大小（宽150，高35）
+        guestBtn.setBounds(centerX - 75, startY + 250, 150, 35);
+
+// 彻底清空系统默认样式，全靠我们手绘
+        guestBtn.setOpaque(false);
         guestBtn.setContentAreaFilled(false);
         guestBtn.setBorderPainted(false);
         guestBtn.setFocusPainted(false);
 
-        // 3. 设置低调的暗灰色字体，字号调小
-        guestBtn.setForeground(new Color(200, 180, 120));
-        guestBtn.setFont(new Font("微软雅黑", Font.PLAIN, 15));
+// 🌟 核心：加上这行，鼠标移上去才会变成小手！
         guestBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // 4. 鼠标放上去变成小手
-        guestBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        // 5. 鼠标悬停时，文字变亮金色，提示用户可以点击
-        guestBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                guestBtn.setForeground(new Color(255, 215, 0));
-            }
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                guestBtn.setForeground(new Color(200, 180, 120));
-            }
-        });
-
-        // 6. 点击逻辑（保持你原来的不变）
+// 点击逻辑：直接进入游戏
         guestBtn.addActionListener(e -> {
             this.dispose();
             Board board = new Board();
@@ -210,6 +236,8 @@ public class LoginFrame extends JFrame {
             frame.getBoardPanel().addMouseListener(controller);
             frame.setVisible(true);
         });
+
+// 添加到背景面板
         bgPanel.add(guestBtn);
 
         // --- 右上角关闭按钮 (两张刀剑图特效版) ---
