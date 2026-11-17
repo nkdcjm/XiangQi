@@ -7,7 +7,8 @@ public class BingPiece extends Piece{
             if (fromRow >= 5 && !(Math.abs(toCol - fromCol) == 0 && fromRow - toRow == 1)) {
                 return false;
             }
-            if (fromRow < 5 && !(Math.abs(toCol - fromCol) == 1 || fromRow - toRow == 1)) {
+            if (fromRow < 5 && !(Math.abs(toCol - fromCol) == 1 && toRow == fromRow ||
+                    (fromRow - toRow == 1 && toCol == fromCol))) {
                 return false;
             }
         }
@@ -15,7 +16,8 @@ public class BingPiece extends Piece{
             if (fromRow < 5 && !(Math.abs(toCol - fromCol) == 0 && fromRow - toRow == -1)) {
                 return false;
             }
-            if (fromRow >= 5 && !(Math.abs(toCol - fromCol) == 1 || fromRow - toRow == -1)) {
+            if (fromRow >= 5 && !(Math.abs(toCol - fromCol) == 1 && toRow == fromRow ||
+                    (fromRow - toRow == 1 && toCol == fromCol))) {
                 return false;
             }
 

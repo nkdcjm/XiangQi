@@ -51,6 +51,43 @@ public class Board {
         pieces[6][6] = new BingPiece(true);
         pieces[6][8] = new BingPiece(true);
     }
+    public int waycount (int fromRow , int toRow, int fromCol, int toCol){
+        int count = 0;
+        int n = 0;
+        if(fromRow == toRow){
+            n = Math.abs(fromCol - toCol);
+            for (int i = 0; i < n-1; i++) {
+                if(toCol > fromCol) {
+                    if (getPieceAt(fromRow, fromCol + i + 1) != null) {
+                        count++;
+                    }
+                }
+                if(toCol < fromCol) {
+                    if (getPieceAt(fromRow, fromCol - i - 1) != null) {
+                        count++;
+                    }
+                }
+
+            }
+        }
+        if(fromCol == toCol){
+            n = Math.abs(fromRow - toRow);
+            for (int i = 0; i < n-1; i++) {
+                if(toRow > fromRow) {
+                    if (getPieceAt(fromRow + i + 1, fromCol) != null) {
+                        count++;
+                    }
+                }
+                if(toRow < fromRow) {
+                    if (getPieceAt(fromRow - i - 1, fromCol) != null) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+
+    }
 
     public boolean isInside(int row, int col) {
         return row >= 0 && row < ROWS && col >= 0 && col < COLS;
