@@ -45,10 +45,6 @@ public class ChessFrame extends JFrame {
                 if (titleBgImage != null && titleBgImage.getWidth(null) > 0) {
                     // 将龙纹图拉伸铺满整个标题栏
                     g.drawImage(titleBgImage, 0, 0, getWidth(), getHeight(), this);
-                } else {
-                    // 如果没找到图片，还是用深灰色兜底
-                    g.setColor(new Color(20, 20, 20));
-                    g.fillRect(0, 0, getWidth(), getHeight());
                 }
             }
         };

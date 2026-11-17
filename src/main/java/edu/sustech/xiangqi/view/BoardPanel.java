@@ -4,15 +4,7 @@ import edu.sustech.xiangqi.model.Board;
 import edu.sustech.xiangqi.model.Piece;
 
 import javax.swing.*;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
+import java.awt.*;
 
 // 绘制棋盘、棋子和选中效果
 public final class BoardPanel extends JPanel {
@@ -69,14 +61,32 @@ public final class BoardPanel extends JPanel {
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D) graphics.create();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // 1. 加载并绘制木纹背景图
+        Image bg = new ImageIcon("board_bg.jpg").getImage();
+        if (bg != null && bg.getWidth(null) > 0) {
+            g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+            // 加入半透明黑色遮罩
+            // 把整体亮度压暗，凸显棋盘线
+            g.setColor(new Color(0, 0, 0, 100)); // 100是透明度，觉得暗可以改小
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        // 2. 画棋盘线（你原本的代码）
         drawBoard(g);
+
+        // 3. 画棋子（你原本的代码）
         drawPieces(g);
+
         g.dispose();
     }
 
     private void drawBoard(Graphics2D g) {
-        g.setColor(new Color(117, 83, 51));
-        g.setStroke(new BasicStroke(1.5f));
+        // 1. 把线改成亮金色（RGB: 255, 215, 0），带一点点透明度让它融入背景
+        g.setColor(new Color(255, 215, 0, 220));
+
+        // 2. 把线条加粗到 2.0f（原本是 1.5f），这样在复杂的背景上更显眼
+        g.setStroke(new BasicStroke(2.0f));
 
         for (int row = 0; row < Board.ROWS; row++) {
             drawGridLine(g, row, 0, row, Board.COLS - 1);
@@ -112,6 +122,8 @@ public final class BoardPanel extends JPanel {
 
                 int x = screenX(col);
                 int y = screenY(row);
+
+                // 你原本的高亮选中代码
                 if (row == highlightedRow && col == highlightedCol) {
                     g.setColor(new Color(31, 120, 119));
                     g.setStroke(new BasicStroke(3));
@@ -119,13 +131,23 @@ public final class BoardPanel extends JPanel {
                     g.drawOval(x - radius, y - radius, radius * 2, radius * 2);
                 }
 
-                g.setColor(new Color(255, 248, 228));
+                // 1. 画棋子阴影
+                // 向右下角偏移 3 像素，半透明黑色，瞬间拥有立体感
+                g.setColor(new Color(0, 0, 0, 100));
+                g.fillOval(x - PIECE_RADIUS + 3, y - PIECE_RADIUS + 3, PIECE_RADIUS * 2, PIECE_RADIUS * 2);
+
+                // 2. 画棋子白底（改为米黄色木头）
+                g.setColor(new Color(250, 240, 220)); // 柔和的白
                 g.fillOval(x - PIECE_RADIUS, y - PIECE_RADIUS, PIECE_RADIUS * 2, PIECE_RADIUS * 2);
-                g.setColor(new Color(120, 79, 45));
+
+                // 3. 画棋子边框（改粗变深）
+                g.setColor(new Color(120, 79, 45)); // 深木色
                 g.setStroke(new BasicStroke(2));
                 g.drawOval(x - PIECE_RADIUS, y - PIECE_RADIUS, PIECE_RADIUS * 2, PIECE_RADIUS * 2);
-                g.setColor(piece.isRed() ? new Color(177, 43, 39) : new Color(43, 43, 43));
-                g.setFont(new Font(Font.SERIF, Font.BOLD, 28));
+
+                // 4. 画字（加大加粗，换楷体）
+                g.setColor(piece.isRed() ? new Color(180, 30, 30) : new Color(30, 30, 30)); // 红方暗红，黑方纯黑
+                g.setFont(new Font("楷体", Font.BOLD, 28)); // 换成了楷体，更有古风
                 drawCenteredText(g, piece.getName(), x, y);
             }
         }

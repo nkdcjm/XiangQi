@@ -79,8 +79,10 @@ public class Board {
         // TODO: 加入回合检查，只允许当前一方移动自己的棋子
 
         // TODO: 区分己方占用与敌方棋子，并实现吃子
-        if (getPieceAt(toRow, toCol) != null) {
-            return false;
+        //只拦截吃自己的棋子，敌方棋子允许通过
+        Piece targetPiece = getPieceAt(toRow, toCol);
+        if (targetPiece != null && targetPiece.isRed() == piece.isRed()) {
+            return false; // 目标是自己人，拦截
         }
 
         if (!piece.canMove(this, fromRow, fromCol, toRow, toCol)) {

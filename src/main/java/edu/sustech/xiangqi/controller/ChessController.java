@@ -36,31 +36,28 @@ public class ChessController extends MouseAdapter {
     }
 
     private void handleClick(int row, int col) {
-        boardPanel.label.setText("点击棋盘啦");//点棋子的字幕
-        if (row == selectedRow && col == selectedCol) {
-            clearSelection();
-            return;
-        }
-
-        Piece clickedPiece = board.getPieceAt(row, col);
+        // 如果还没选中任何棋子
         if (selectedRow == -1) {
-            if (clickedPiece != null) {
+            if (board.getPieceAt(row, col) != null) {
                 select(row, col);
             }
             return;
         }
 
-        // 点击另一枚己方棋子时切换选择
         Piece selectedPiece = board.getPieceAt(selectedRow, selectedCol);
-        if (clickedPiece != null && selectedPiece != null
-                && clickedPiece.isRed() == selectedPiece.isRed()) {
+        Piece clickedPiece = board.getPieceAt(row, col);
+
+        // 如果点的是另一个己方棋子，直接换选，不要走 tryMove！
+        if (clickedPiece != null && selectedPiece != null &&
+                clickedPiece.isRed() == selectedPiece.isRed()) {
             select(row, col);
             return;
         }
 
-        // 移动失败时保留选择，用户可以继续选择其他落点
+        // 如果点的是空地，或者敌方棋子，才尝试移动
         if (board.tryMove(selectedRow, selectedCol, row, col)) {
             clearSelection();
+            boardPanel.repaint();
         }
     }
 

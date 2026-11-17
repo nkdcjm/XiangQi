@@ -39,9 +39,6 @@ public class LoginFrame extends JFrame {
                 if (bgImage != null) {
                     // 直接从内存画图，速度极快，不会闪烁
                     g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
-                } else {
-                    g.setColor(new Color(40, 40, 40));
-                    g.fillRect(0, 0, getWidth(), getHeight());
                 }
             }
         };
