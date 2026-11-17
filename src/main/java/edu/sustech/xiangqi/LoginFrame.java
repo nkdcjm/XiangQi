@@ -170,10 +170,8 @@ public class LoginFrame extends JFrame {
         regBtn.setBounds(centerX - 125, startY + 190, 250, 45);
         bgPanel.add(regBtn);
 
-        // ==========================================
-// --- 游客试玩 (半透明磨砂框 + 鼠标小手) ---
-// ==========================================
-        JButton guestBtn = new JButton("游客试玩 →") {
+        // --- 游客试玩 (半透明磨砂框 + 鼠标小手) ---
+        JButton guestBtn = new JButton("初出茅庐 →") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g.create();
@@ -186,10 +184,10 @@ public class LoginFrame extends JFrame {
                     // 鼠标悬停时，底色稍微变亮（深灰），增加质感
                     g2d.setColor(new Color(50, 50, 50, 150));
                 } else {
-                    // 平时是纯粹的半透明黑底（120的透明度，绝不突兀）
+                    // 平时是纯粹的半透明黑底
                     g2d.setColor(new Color(0, 0, 0, 120));
                 }
-                // 画圆角矩形，弧度20，和你的双龙按钮呼应
+                // 画圆角矩形
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
 
                 // 2. 画极细的暗金色边框，增加高级感
@@ -203,7 +201,7 @@ public class LoginFrame extends JFrame {
                 int x = (getWidth() - fm.stringWidth(getText())) / 2;
                 int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
 
-                // 鼠标悬停文字变纯白，平时是灰白
+                // 鼠标悬停文字亮金色，平时是金色
                 if (getModel().isRollover()) {
                     g2d.setColor(new Color(255,215,0));
                 } else {

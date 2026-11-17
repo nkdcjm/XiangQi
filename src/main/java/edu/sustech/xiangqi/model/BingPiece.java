@@ -17,7 +17,7 @@ public class BingPiece extends Piece{
                 return false;
             }
             if (fromRow >= 5 && !(Math.abs(toCol - fromCol) == 1 && toRow == fromRow ||
-                    (fromRow - toRow == 1 && toCol == fromCol))) {
+                    (fromRow - toRow == -1 && toCol == fromCol))) {
                 return false;
             }
 

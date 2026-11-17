@@ -57,6 +57,9 @@ public class Board {
         if(fromRow == toRow){
             n = Math.abs(fromCol - toCol);
             for (int i = 0; i < n-1; i++) {
+
+
+                
                 if(toCol > fromCol) {
                     if (getPieceAt(fromRow, fromCol + i + 1) != null) {
                         count++;
