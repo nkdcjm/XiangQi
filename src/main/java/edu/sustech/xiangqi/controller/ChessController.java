@@ -38,7 +38,7 @@ public class ChessController extends MouseAdapter {
     private void handleClick(int row, int col) {
         // 如果还没选中任何棋子
         if (selectedRow == -1) {
-            if (board.getPieceAt(row, col) != null) {
+            if (board.getPieceAt(row, col) != null && board.getPieceAt(row, col).isRed() == board.isRedToMove()) {
                 select(row, col);
             }
             return;

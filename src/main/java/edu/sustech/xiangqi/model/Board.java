@@ -9,6 +9,12 @@ public class Board {
 
     // 存储棋子位置
     private final Piece[][] pieces = new Piece[ROWS][COLS];
+    //红方先行
+    private boolean redToMove = true;
+    //判断是否是红方的回合
+    public boolean isRedToMove() {
+        return redToMove;
+    }
 
     public Board() {
         initializePieces();
@@ -57,9 +63,6 @@ public class Board {
         if(fromRow == toRow){
             n = Math.abs(fromCol - toCol);
             for (int i = 0; i < n-1; i++) {
-
-
-                
                 if(toCol > fromCol) {
                     if (getPieceAt(fromRow, fromCol + i + 1) != null) {
                         count++;
@@ -104,6 +107,7 @@ public class Board {
     }
 
     public boolean tryMove(int fromRow, int fromCol, int toRow, int toCol) {
+
         if (!isInside(fromRow, fromCol) || !isInside(toRow, toCol)) {
             return false;
         }
@@ -115,7 +119,9 @@ public class Board {
         if (piece == null) {
             return false;
         }
-
+        if(piece.isRed() != redToMove){
+            return false;
+        }
         // TODO: 加入回合检查，只允许当前一方移动自己的棋子
 
         // TODO: 区分己方占用与敌方棋子，并实现吃子
@@ -132,6 +138,7 @@ public class Board {
         // TODO: 检查走完后己方将帅是否安全
         pieces[fromRow][fromCol] = null;
         pieces[toRow][toCol] = piece;
+        redToMove = !redToMove;
 
         // TODO: 仅在成功移动后切换回合，并判断将军、胜负等状态
         return true;
