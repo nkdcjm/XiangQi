@@ -11,6 +11,9 @@ public class PaoPiece extends Piece {
         if (!(toRow - fromRow == 0 || toCol - fromCol == 0)) {
             return false;
         }
-        return board.waycount(fromRow, toRow, fromCol, toCol) == 1;
+        if(board.waycount(fromRow, toRow, fromCol, toCol) == 0 && board.getPieceAt(toRow ,toCol) == null){
+            return true;
+        }
+        return (board.waycount(fromRow, toRow, fromCol, toCol) == 1 && board.getPieceAt(toRow ,toCol) != null);
     }
 }
