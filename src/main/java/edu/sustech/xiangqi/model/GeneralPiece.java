@@ -4,7 +4,7 @@ package edu.sustech.xiangqi.model;
 
 public class GeneralPiece extends Piece {
     public GeneralPiece(boolean isRed) {
-        super(isRed ? "帅" : "将", isRed);
+        super(isRed ? "帥" : "將", isRed);
     }
 
     @Override

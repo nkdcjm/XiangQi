@@ -1,7 +1,7 @@
 package edu.sustech.xiangqi.model;
 
 public class MaPiece extends Piece {
-    public MaPiece(boolean isRed) {super("马", isRed);}
+    public MaPiece(boolean isRed) {super("馬", isRed);}
     public boolean canMove(Board board, int fromRow, int fromCol, int toRow, int toCol) {
         int colDiff = Math.abs(toCol - fromCol);
         int rowDiff = Math.abs(fromRow - toRow);
