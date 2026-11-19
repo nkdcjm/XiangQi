@@ -7,6 +7,11 @@ public class Board {
     public static final int ROWS = 10;
     public static final int COLS = 9;
 
+    //判断是否游戏结束
+    public static boolean gameover = false;
+    //判断哪一方胜利
+    public static boolean redwin = false;
+
     // 存储棋子位置
     private final Piece[][] pieces = new Piece[ROWS][COLS];
     //红方先行
@@ -108,6 +113,11 @@ public class Board {
 
     public boolean tryMove(int fromRow, int fromCol, int toRow, int toCol) {
 
+        if(gameover){
+
+            return false;
+        }
+
         if (!isInside(fromRow, fromCol) || !isInside(toRow, toCol)) {
             return false;
         }
@@ -139,6 +149,20 @@ public class Board {
         pieces[fromRow][fromCol] = null;
         pieces[toRow][toCol] = piece;
         redToMove = !redToMove;
+//如果目标是某一个将或者帅，那么游戏会结束，并打印结果
+        if (targetPiece instanceof GeneralPiece){
+            pieces[fromRow][fromCol] = null;
+            pieces[toRow][toCol] = piece;
+            if(!redToMove){
+                redwin = true;
+                System.out.println("红方胜利了");
+            }
+            else {
+                redwin = false;
+                System.out.println("黑方胜利了");
+            }
+            gameover = true;
+        }
 
         // TODO: 仅在成功移动后切换回合，并判断将军、胜负等状态
         return true;
