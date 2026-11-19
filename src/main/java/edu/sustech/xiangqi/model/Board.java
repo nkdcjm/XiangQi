@@ -132,7 +132,6 @@ public class Board {
         if(piece.isRed() != redToMove){
             return false;
         }
-        // TODO: 加入回合检查，只允许当前一方移动自己的棋子
 
         // TODO: 区分己方占用与敌方棋子，并实现吃子
         //只拦截吃自己的棋子，敌方棋子允许通过
@@ -166,5 +165,81 @@ public class Board {
 
         // TODO: 仅在成功移动后切换回合，并判断将军、胜负等状态
         return true;
+    }
+
+    // 1. 存档方法
+    public void saveGame(String filename) {
+        try (java.io.PrintWriter writer = new java.io.PrintWriter(filename)) {
+            // 第一行存当前该谁走（TURN,true 代表红方，TURN,false 代表黑方）
+            writer.println("TURN," + redToMove);
+
+            // 遍历存所有的棋子
+            for (int row = 0; row < ROWS; row++) {
+                for (int col = 0; col < COLS; col++) {
+                    Piece p = pieces[row][col];
+                    if (p != null) {
+                        writer.println(row + "," + col + "," + p.isRed() + "," + p.getName());
+                    }
+                }
+            }
+            System.out.println("游戏进度已保存！");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 2. 读档方法
+    public void loadGame(String filename) {
+        java.io.File file = new java.io.File(filename);
+        if (!file.exists()) {
+            System.out.println("找不到存档文件！");
+            return;
+        }
+
+        // 读档前，先清空当前棋盘
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                pieces[row][col] = null;
+            }
+        }
+
+        // 读取文件
+        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("TURN,")) {
+                    String[] parts = line.split(",");
+                    redToMove = Boolean.parseBoolean(parts[1]);
+                } else {
+                    String[] parts = line.split(",");
+                    if (parts.length == 4) {
+                        int row = Integer.parseInt(parts[0]);
+                        int col = Integer.parseInt(parts[1]);
+                        boolean isRed = Boolean.parseBoolean(parts[2]);
+                        String name = parts[3];
+
+                        Piece newPiece = createPieceByName(name, isRed);
+                        if (newPiece != null) {
+                            pieces[row][col] = newPiece;
+                        }
+                    }
+                }
+            }
+            System.out.println("读档成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 3. 辅助方法：根据名字翻译成棋子对象
+    private Piece createPieceByName(String name, boolean isRed) {
+        if (name.equals("俥") || name.equals("車")) return new JuPiece(isRed);
+        if (name.equals("馬")) return new MaPiece(isRed);
+        if (name.equals("象") || name.equals("相")) return new XiangPiece(isRed);
+        if (name.equals("士") || name.equals("仕")) return new AdvisorPiece(isRed);
+        if (name.equals("將") || name.equals("帥")) return new GeneralPiece(isRed);
+        if (name.equals("炮") || name.equals("砲")) return new PaoPiece(isRed);
+        if (name.equals("卒") || name.equals("兵")) return new BingPiece(isRed);
+        return null;
     }
 }

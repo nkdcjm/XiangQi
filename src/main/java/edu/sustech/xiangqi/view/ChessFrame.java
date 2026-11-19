@@ -155,9 +155,47 @@ public class ChessFrame extends JFrame {
             }
         });
 
+        //右侧专属控制面板
+        JPanel rightPanel = new JPanel(null);
+        rightPanel.setPreferredSize(new Dimension(100, 0)); // 宽度 100 像素
+        rightPanel.setBackground(new Color(25, 25, 25)); // 侧边栏颜色
+
+        // 字体样式，用于右侧按钮
+        Font sideBtnFont = new Font("楷体", Font.BOLD, 18);
+        //存档
+        JButton saveBtn = new JButton("存档");
+        saveBtn.setBounds(10, 50, 80, 45);
+        saveBtn.setBackground(new Color(40, 40, 40));
+        saveBtn.setForeground(new Color(255, 215, 0));
+        saveBtn.setFont(sideBtnFont);
+        saveBtn.setFocusPainted(false);
+        saveBtn.setBorderPainted(false);
+        saveBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        saveBtn.addActionListener(e -> {
+            board.saveGame("save.txt");
+            JOptionPane.showMessageDialog(this, "存档成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
+        });
+        rightPanel.add(saveBtn);
+        //读档
+        JButton loadBtn = new JButton("读档");
+        loadBtn.setBounds(10, 110, 80, 45);
+        loadBtn.setBackground(new Color(40, 40, 40));
+        loadBtn.setForeground(new Color(255, 215, 0));
+        loadBtn.setFont(sideBtnFont);
+        loadBtn.setFocusPainted(false);
+        loadBtn.setBorderPainted(false);
+        loadBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        loadBtn.addActionListener(e -> {
+            board.loadGame("save.txt");
+            boardPanel.repaint();
+            JOptionPane.showMessageDialog(this, "读档成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
+        });
+        rightPanel.add(loadBtn);
+
         // 6. 拼装界面
         mainPanel.add(titleBar, BorderLayout.NORTH);
         mainPanel.add(boardPanel, BorderLayout.CENTER);
+        mainPanel.add(rightPanel,BorderLayout.EAST);
 
         // 7. 交互逻辑：拖拽与拉伸
         // 7.1 顶部标题栏拖拽 (支持全屏状态下拖拽退出全屏)
