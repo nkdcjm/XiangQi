@@ -172,8 +172,12 @@ public class ChessFrame extends JFrame {
         saveBtn.setBorderPainted(false);
         saveBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         saveBtn.addActionListener(e -> {
-            board.saveGame("save.txt");
-            JOptionPane.showMessageDialog(this, "存档成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
+            // 弹出一个输入框，让玩家选择存在哪个位置
+            String input = JOptionPane.showInputDialog(this, "请输入存档位 (1, 2, 或 3):", "选择存档位", JOptionPane.QUESTION_MESSAGE);
+            if (input != null && (input.matches("[1-6]"))) {
+                board.saveGame("save" + input + ".txt"); // 存为 save1.txt 或 save2.txt
+                JOptionPane.showMessageDialog(this, "成功存入存档位 " + input + "！", "提示", JOptionPane.INFORMATION_MESSAGE);
+            }
         });
         rightPanel.add(saveBtn);
         //读档
@@ -186,9 +190,9 @@ public class ChessFrame extends JFrame {
         loadBtn.setBorderPainted(false);
         loadBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         loadBtn.addActionListener(e -> {
-            board.loadGame("save.txt");
-            boardPanel.repaint();
-            JOptionPane.showMessageDialog(this, "读档成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
+            // 不再直接读档，而是打开我们刚写好的带缩略图的弹窗！
+            LoadGameDialog dialog = new LoadGameDialog(this, board, boardPanel);
+            dialog.setVisible(true); // 显示弹窗
         });
         rightPanel.add(loadBtn);
 
