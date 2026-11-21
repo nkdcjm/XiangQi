@@ -12,12 +12,12 @@ TURN,true
 2,7,false,砲
 3,0,false,卒
 3,2,false,卒
+3,4,false,卒
 3,6,false,卒
 3,8,false,卒
-4,4,false,卒
-5,4,true,兵
 6,0,true,兵
 6,2,true,兵
+6,4,true,兵
 6,6,true,兵
 6,8,true,兵
 7,1,true,炮
