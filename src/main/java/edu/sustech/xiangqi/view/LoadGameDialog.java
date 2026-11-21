@@ -24,7 +24,7 @@ public class LoadGameDialog extends JDialog {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                // 强制画一个绝对纯黑的矩形，彻底封死底层
+                // 强制画一个绝对纯黑的矩形，封死底层
                 g.setColor(new Color(20, 20, 20));
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
@@ -103,9 +103,9 @@ public class LoadGameDialog extends JDialog {
         });
 
         if (file.exists()) {
-            // 如果有存档，创建一个专门的【迷你棋盘面板】放进去，绝对不越界！
+            // 如果有存档，创建一个专门的【迷你棋盘面板】放进去
             MiniBoardPanel miniBoard = new MiniBoardPanel(file);
-            // 绝对定位：放在槽位下半部分，居中
+            // 放在槽位下半部分，居中
             miniBoard.setBounds(10, 40, 280, 360);
             slotPanel.add(miniBoard);
         } else {
@@ -119,9 +119,7 @@ public class LoadGameDialog extends JDialog {
         return slotPanel;
     }
 
-    // ==========================================
-    // 独立出来的迷你棋盘面板类 (彻底告别坐标混乱)
-    // ==========================================
+    // 独立出来的迷你棋盘面板类
     class MiniBoardPanel extends JPanel {
         private File file;
 
@@ -136,7 +134,7 @@ public class LoadGameDialog extends JDialog {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            // 因为这是独立面板，所以宽高就固定在 230x300 左右，绝对不会算出负数
+            // 宽高固定在 230x300 左右
             int cellSize = 24;
             int boardW = cellSize * 8;
             int boardH = cellSize * 9;
